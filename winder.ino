@@ -13,22 +13,26 @@ Notes:
 
 Toggle Switch: For On/Off Battery (not connected to arduino)
 Push-button: Reset
-Limit switch: Sporadic Rotation Change (advance/override loop)
+Limit switch: 5, Sporadic Rotation Change/other (advance/override loop/not needed for my watch)
 
-DIR:
-STEP:
-EN:
+DIR: 3
+STEP: 2
+EN: GND (4/6?)
 
-M1B:
-M1A:
-M2B:
-M2A:
+M1B: BLK/GRN
+M1A: GRN/BLK
+M2B: RED/BLU 
+M2A: BLU/RED
 
-9V to VIN, VIO
-+VMOT to 5v Arduino 
-GND to GND on Arduino
+9V: VIN, VIO
++VMOT: 5v Arduino 
+GND: GND on Arduino
 
 
+USING: Stepper Motor: Bipolar, 200 Steps/Rev, 28×32mm, 3.8V, 0.67 A/Phase
+
+For My Watch: Luxury Automatic (Powermatic 80) - Directional requirements: CCW 800 
+https://www.orbita.com/winder-support/
 
 */
 int smDirectionPin = 3; //Direction

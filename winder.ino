@@ -8,8 +8,29 @@ SIMPLE WATCH WINDER
 
 c/o https://www.instructables.com/Dual-Automatic-Watch-Winder/
 
-*/
+Notes:
 
+
+Toggle Switch: For On/Off Battery (not connected to arduino)
+Push-button: Reset
+Limit switch: Sporadic Rotation Change (advance/override loop)
+
+DIR:
+STEP:
+EN:
+
+M1B:
+M1A:
+M2B:
+M2A:
+
+9V to VIN, VIO
++VMOT to 5v Arduino 
+GND to GND on Arduino
+
+
+
+*/
 int smDirectionPin = 3; //Direction
 int smStepPin = 2; //Stepper
 
@@ -21,27 +42,14 @@ void setup(){
  
 void loop(){
 
-  digitalWrite(smDirectionPin, HIGH); //Set the rotation direction (HIGH is clockwise).
+  digitalWrite(smDirectionPin, HIGH); //Set the rotation direction (HIGH is clockwise;LOW is counter-clockwise).
   /*Turns the motor 20000 steps*/
   for (int i = 0; i < 20000; i++){
     digitalWrite(smStepPin, HIGH);
     delayMicroseconds(800);
     digitalWrite(smStepPin, LOW);
     delayMicroseconds(800);
-  } 
-
-delay(1000); //Pauses for a second
-
-digitalWrite(smDirectionPin, LOW); //Rotation direction (LOW is counter-clockwise).
-  for (int i = 0; i < 20000; i++){
-    digitalWrite(smStepPin, HIGH);
-    delayMicroseconds(800);
-    digitalWrite(smStepPin, LOW);
-    delayMicroseconds(800);
-  } 
-
-delay(1000);
-
+  }
 }
 
 /*                

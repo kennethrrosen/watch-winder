@@ -7,7 +7,8 @@ SIMPLE WATCH WINDER
   
   Notes: 
   Developed and tested using Arduino IDE ver 1.8.42.0 in VS Code
-  
+  BTT TMC2008-V3.0 Driver
+
   Pinout:
   Toggle Switch: For On/Off Battery (not connected to arduino)
   Push-button: Reset
@@ -15,13 +16,15 @@ SIMPLE WATCH WINDER
   DIR: 4
   STEP: 5
   EN: 6
-  M1B: BLK/GRN
-  M1A: GRN/BLK
-  M2B: RED/BLU 
-  M2A: BLU/RED
-  9V: VIN, VIO
-  +VMOT: 5v Arduino 
-  GND: GND on Arduino
+  OB2: BLK/GRN
+  OB1: GRN/BLK
+  OA1: RED/BLU 
+  OA2: BLU/RED
+  MS1: VIO (16 steps enabled)
+  MS2: VIO (16 Steps enabled)
+  9V: VIN
+  VM: 5v from Arduino 
+  GND: GND to reset switch
 
   Stepper Motor: 
   NEMA11, 1.8° step angle (200 steps/revolution), with each phase drawing 670 mA at 3.5 V
@@ -67,7 +70,7 @@ void loop(){
     digitalWrite(smStepPin, LOW);
   }
 
-  if digitalRead(limitswitch, 1){
+  if digitalRead(limitswitch = 1){
     digitalWrite(smDirectionPin, HIGH);
     digitalWrite(smStepPin, HIGH)
     delayMicroseconds(800);

@@ -42,6 +42,8 @@ SIMPLE WATCH WINDER
 
 #define EN_PIN    8  
 #define STEP_PIN  7  
+#define DIR_PIN   6
+#define LIM_PIN   4
 #define RX_PIN    0  
 #define TX_PIN    1  
 
@@ -55,16 +57,23 @@ void setup() {
   // Prepare pins
   pinMode(EN_PIN, OUTPUT);
   pinMode(STEP_PIN, OUTPUT);
+  pinMode(DIR_PIN, OUTPUT);
+  pinMode(LIM_PIN, INPUT);
 
   driver.pdn_disable(true);     // Use PDN/UART pin for communication
   driver.I_scale_analog(false); // Use internal voltage reference
-  driver.rms_current(640);      // Set driver current = 500mA, 0.5 multiplier for hold current and RSENSE = 0.11.
+  driver.rms_current(500);      // Set driver current = 500mA, 0.5 multiplier for hold current and RSENSE = 0.11.
   driver.toff(2);               // Enable driver in software
 
   digitalWrite(EN_PIN, LOW);    // Enable driver in hardware
+  Serial.begin(9600); 
+  
 }
 
 void loop() {
+  digitalWrite(DIR_PIN, HIGH);    // HIGH = CCW LOW= CW
+  for (int i = 0; i < 160000; i++){ //800TPD
   digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
   delay(1);
+  }
 }

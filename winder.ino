@@ -16,15 +16,15 @@ SIMPLE WATCH WINDER
   DIR: 6
   STEP: 7
   EN: 8
-  OB2: BLK/GRN
-  OB1: GRN/BLK
-  OA1: RED/BLU 
-  OA2: BLU/RED
+  OB2: BLK
+  OB1: GRN
+  OA1: RED
+  OA2: BLU
   MS1: VIO (16 steps enabled)
   MS2: VIO (16 Steps enabled)
   9V: VIN
   VM: 5v from Arduino 
-  GND: GND to reset switch
+  GND: GND to Arduino GND
 
   Stepper Motor: 
   NEMA11, 1.8° step angle (200 steps/revolution), with each phase drawing 670 mA at 3.5 V

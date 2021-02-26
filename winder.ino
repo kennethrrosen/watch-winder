@@ -12,10 +12,10 @@ SIMPLE WATCH WINDER
   Pinout:
   Toggle Switch: For On/Off Battery (not connected to arduino)
   Push-button: Reset
-  Limit switch: 7, Sporadic Rotation Change/other (advance/override loop/not needed for my watch)
-  DIR: 4
-  STEP: 5
-  EN: 6
+  Limit switch: 4, Sporadic Rotation Change/other (advance/override loop/not needed for my watch)
+  DIR: 6
+  STEP: 7
+  EN: 8
   OB2: BLK/GRN
   OB1: GRN/BLK
   OA1: RED/BLU 
@@ -38,58 +38,33 @@ SIMPLE WATCH WINDER
   https://github.com/goldcove/Easy-Watch-Winder/blob/master/watchwinder.ino
 
 */
+#include <TMC2208Stepper.h>
 
-#include <AccelStepper.h>
-//#include <Stepper.h> 
+#define EN_PIN    8  
+#define STEP_PIN  7  
+#define RX_PIN    0  
+#define TX_PIN    1  
 
-int smDirectionPin = 4; //Direction
-int smStepPin = 5; //Stepper
-int tpd;
-int turndirection; //Motor turnning direction. 0=both, 1=clockwise, 2=counterclockwise. In accordance with your watch requirements.
+// Create driver that uses SoftwareSerial for communication
+TMC2208Stepper driver = TMC2208Stepper(RX_PIN, TX_PIN);
 
-boolean limitSwitch 7
-const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution
+void setup() {
+  driver.beginSerial(115200);
+  // Push at the start of setting up the driver resets the register to default
+  driver.push();
+  // Prepare pins
+  pinMode(EN_PIN, OUTPUT);
+  pinMode(STEP_PIN, OUTPUT);
 
-void setup(){
-  myStepper.setSpeed(60); // set the speed at 60 rpm:
-  pinMode(smDirectionPin, OUTPUT);
-  pinMode(smStepPin, OUTPUT);
-  pinMode(limitSwitch, INPUT);
-  Serial.begin(9600);
+  driver.pdn_disable(true);     // Use PDN/UART pin for communication
+  driver.I_scale_analog(false); // Use internal voltage reference
+  driver.rms_current(640);      // Set driver current = 500mA, 0.5 multiplier for hold current and RSENSE = 0.11.
+  driver.toff(2);               // Enable driver in software
+
+  digitalWrite(EN_PIN, LOW);    // Enable driver in hardware
 }
- 
-void loop(){
 
- myStepper.step(stepsPerRevolution);
- myStepper.step(-stepsPerRevolution);
-
-  digitalWrite(smDirectionPin, LOW); //Set the rotation direction (HIGH is clockwise;LOW is counter-clockwise).
-  for (int i = 0; i < 160000; i++){ //800TPD
-    digitalWrite(smStepPin, HIGH);
-    delayMicroseconds(800);
-    digitalWrite(smStepPin, LOW);
-  }
-
-  if digitalRead(limitswitch = 1){
-    digitalWrite(smDirectionPin, HIGH);
-    digitalWrite(smStepPin, HIGH)
-    delayMicroseconds(800);
-    digitalWrite(smStepPin, LOW)
-  }
-
-  cw=0;
-  ccw=0;
-  limitSwitch (turndirection) {
-    case 0: //both directions
-      cw=turns/2;
-      ccw=turns-cw; //in case odd number
-      break;
-    case 1: //clockwise
-      cw=turns;
-      break;
-    case 2: //counterclockwise
-      ccw=turns;
-      break;
-
-    delay(540000) //30 minute break
+void loop() {
+  digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
+  delay(1);
 }

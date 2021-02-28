@@ -103,9 +103,44 @@ void winderCW() {
 */
 void loop() {
   if (limit == false) {
-    winderCW();   //limOptions = winder rotate on long button press; pause on short press
+    winderCW();   //limOptions = alternate winder rotate on long button press; pause on short press
   }
   else if (limit == true) {
     winderCCW();
   }
 }
+
+/*
+
+NOTES FOR limOptions
+====================
+
+const int SHORT_PRESS_TIME = 1000; 
+const int LONG_PRESS_TIME  = 5000;
+
+int lastState = LOW;  
+int currentState;     
+unsigned long pressedTime  = 0;
+unsigned long releasedTime = 0;
+
+currentState = digitalRead(LIM_PIN);
+
+if (lastState == HIGH && currentState == LOW)        // button is pressed
+    pressedTime = millis();
+  else if(lastState == LOW && currentState == HIGH) { // button is released
+    releasedTime = millis();
+
+    long pressDuration = releasedTime - pressedTime;
+
+    if (pressDuration < SHORT_PRESS_TIME )
+      //SWITCH TO CLOCKWISE
+
+    if (pressDuration > LONG_PRESS_TIME )
+      //PAUSE FOR 30 SECONDS
+  }
+
+  // save the the last state
+  lastState = currentState;
+}
+
+*/

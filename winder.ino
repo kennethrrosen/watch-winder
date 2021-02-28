@@ -38,42 +38,74 @@ SIMPLE WATCH WINDER
   https://github.com/goldcove/Easy-Watch-Winder/blob/master/watchwinder.ino
 
 */
-#include <TMC2208Stepper.h>
+#include <Debouncer.h>
 
-#define EN_PIN    8  
-#define STEP_PIN  7  
-#define DIR_PIN   6
-#define LIM_PIN   4
-#define RX_PIN    0  
-#define TX_PIN    1  
+int pin = 18;
+int debounce_duration_ms = 50;
+int rise_count = 0;
+int fall_count = 0;
 
-// Create driver that uses SoftwareSerial for communication
-TMC2208Stepper driver = TMC2208Stepper(RX_PIN, TX_PIN);
+boolean limit;
+
+Debouncer debouncer(pin, debounce_duration_ms);
+
+#define EN_PIN    7
+#define STEP_PIN  6
+#define DIR_PIN   5
+#define LIM_PIN  18
+#define RX_PIN    0
+#define TX_PIN    1
 
 void setup() {
-  driver.beginSerial(115200);
   // Push at the start of setting up the driver resets the register to default
-  driver.push();
   // Prepare pins
   pinMode(EN_PIN, OUTPUT);
   pinMode(STEP_PIN, OUTPUT);
   pinMode(DIR_PIN, OUTPUT);
-  pinMode(LIM_PIN, INPUT);
-
-  driver.pdn_disable(true);     // Use PDN/UART pin for communication
-  driver.I_scale_analog(false); // Use internal voltage reference
-  driver.rms_current(500);      // Set driver current = 500mA, 0.5 multiplier for hold current and RSENSE = 0.11.
-  driver.toff(2);               // Enable driver in software
 
   digitalWrite(EN_PIN, LOW);    // Enable driver in hardware
-  Serial.begin(9600); 
-  
+
+  pinMode(LIM_PIN, INPUT_PULLUP);
+
 }
 
+void winderCCW() {
+  limit = digitalRead(LIM_PIN);
+  digitalWrite(DIR_PIN, HIGH);        // HIGH = CCW LOW= CW
+  for (int i = 0; i < 160000; i++) {  //800TPD
+    digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
+    delay(1);
+    if (limit == false); {
+      i = 160001;
+      break;
+    }
+    delay(50);
+  }
+}
+
+void winderCW() {
+  limit = digitalRead(LIM_PIN);
+  digitalWrite(DIR_PIN, LOW);        // HIGH = CCW LOW= CW
+  for (int i = 0; i < 160000; i++) {  //800TPD
+    digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
+    delay(1);
+    if (limit == false); {
+      i = 160001;
+      break;
+    }
+    delay(50);
+  }
+}
+
+/*void limOptions() {
+    delay(50);
+  }
+*/
 void loop() {
-  digitalWrite(DIR_PIN, HIGH);    // HIGH = CCW LOW= CW
-  for (int i = 0; i < 160000; i++){ //800TPD
-  digitalWrite(STEP_PIN, !digitalRead(STEP_PIN));
-  delay(1);
+  if (limit == false) {
+    winderCW();   //limOptions = winder rotate on long button press; pause on short press
+  }
+  else if (limit == true) {
+    winderCCW();
   }
 }

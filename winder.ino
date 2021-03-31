@@ -7,7 +7,7 @@ SIMPLE WATCH WINDER
   
   Notes: 
   Developed and tested using Arduino IDE ver 1.8.42.0 in VS Code
-  BTT TMC2008-V3.0 Driver
+  Lerdge® TMC2208 Stepper Motor Driver Module
 
   Pinout:
   Toggle Switch: For On/Off Battery (not connected to arduino)
